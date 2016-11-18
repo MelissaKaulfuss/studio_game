@@ -5,7 +5,6 @@ describe Player do
   before do
     @initial_health = 150
     @player = Player.new("larry", @initial_health)
-    $stdout = StringIO.new
   end
 
     it "has a capitalized name" do
@@ -33,5 +32,27 @@ describe Player do
       @player.blam
       expect(@player.health).to eq(@initial_health - 10)
     end
+
+  context "with a health greater than 100" do
+    
+    before do
+      @player = Player.new("curly", 150)
+    end
+    
+    it "is strong" do
+      expect(@player).to be_strong
+    end
+  end
+
+  context "with a health that is 100 or less" do
+
+    before do
+      @player = Player.new("moe", 100)
+    end
+
+    it "is wimpy" do
+      expect(@player).to_not be_strong
+    end
+  end
 
 end

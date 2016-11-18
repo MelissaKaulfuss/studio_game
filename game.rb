@@ -1,30 +1,30 @@
 require_relative 'player'
+require_relative 'game_turn'
 
 class Game
+
+  attr_reader :title
 
   def initialize(title)
     @title = title
     @players = []
   end
 
-  attr_reader :title
-  attr_accessor :players
-
   def add_player(a_player)
     @players.push(a_player)
   end
 
   def play
-    puts "There are #{players.size} players in #{@title}: "
-    @players.each do | p |
-      puts p 
+    puts "There are #{@players.size} players in #{@title}: "
+
+    @players.each do | player |
+      puts player
     end
-    @players.each do | p |
-      p.blam
-      p.w00t
-      p.w00t
-      puts p
+    
+    @players.each do | player |
+      GameTurn.take_turn(player)
+      puts player
     end
-  end
+  end 
 end
 
