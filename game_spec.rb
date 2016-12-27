@@ -20,16 +20,16 @@ describe Game do
     mock_die = OpenStruct.new(roll: 5)
     allow(Die).to receive(:new).and_return(mock_die)
     
-    @game.play
+    @game.play(2)
 
-    expect(@player.health).to eq(@initial_health + 15)
+    expect(@player.health).to eq(@initial_health + 15 * 2)
   end
 
   it "doesn't affect a players health if a medium number is rolled" do
     mock_die = OpenStruct.new(roll: 3)
     allow(Die).to receive(:new).and_return(mock_die)
     
-    @game.play
+    @game.play(2)
 
     expect(@player.health).to eq(@initial_health)
   end
@@ -38,9 +38,9 @@ describe Game do
     mock_die = OpenStruct.new(roll: 1)
     allow(Die).to receive(:new).and_return(mock_die)
     
-    @game.play
+    @game.play(2)
 
-    expect(@player.health).to eq(@initial_health - 10)
+    expect(@player.health).to eq(@initial_health - 10 * 2)
   end
 
 end
