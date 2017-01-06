@@ -1,6 +1,7 @@
 require_relative 'player'
 require_relative 'game_turn'
 require_relative 'treasure_trove'
+require 'csv'
 
 class Game
 
@@ -16,9 +17,8 @@ class Game
   end
 
   def load_players(from_file)
-    File.readlines(from_file).each do |line|
-      name, health = line.split(",")
-      player = Player.new(name, Integer(health))
+    CSV.foreach(from_file) do |row|
+      player = Player.new(row[0], row[1].to_i)
       add_player(player)
     end
   end
@@ -49,22 +49,17 @@ class Game
     end
   end 
 
-  def save_high_scores(filename="high_scores.txt")
-    File.open(filename, "w") do |file|
-      file.puts "#{title} High Scores:"
-      @players.sort.each do |player|
-        formatted_name = player.name.ljust(20, '.')
-        file.puts "#{formatted_name} #{player.score}" 
-      end
-    end
-  end
-
   def print_player_name_and_health(player)
     puts "#{player.name} (#{player.health})"
   end
 
   def total_points
     @players.reduce(0) { |sum, player| sum + player.points }
+  end
+
+  def high_score_entry(player)
+    formatted_name = player.name.ljust(20, '.')
+    "#{formatted_name} #{player.score}"
   end
 
   def print_stats
@@ -85,9 +80,8 @@ class Game
     
     puts "\n#{@title} High Scores:"
       @players.sort.each do |player|
-      formatted_name = player.name.ljust(20, '.')
-      puts "#{formatted_name} #{player.score}"
-    end
+        puts high_score_entry(player)
+      end
 
     @players.sort.each do |player|
       puts "\n#{player.name}'s points totals:"
@@ -100,5 +94,13 @@ class Game
     puts "\n#{total_points} points from treasures found!"
   end
 
+  def save_high_scores(filename="high_scores.txt")
+    File.open(filename, "w") do |file|
+      file.puts "#{title} High Scores:"
+      @players.sort.each do |player|
+        file.puts high_score_entry(player) 
+      end
+    end
+  end
 end
 
