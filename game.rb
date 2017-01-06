@@ -15,6 +15,14 @@ class Game
     @players.push(a_player)
   end
 
+  def load_players(from_file)
+    File.readlines(from_file).each do |line|
+      name, health = line.split(",")
+      player = Player.new(name, Integer(health))
+      add_player(player)
+    end
+  end
+
   def play(rounds)
 
     treasures = TreasureTrove::TREASURES
@@ -40,6 +48,16 @@ class Game
       end
     end
   end 
+
+  def save_high_scores(filename="high_scores.txt")
+    File.open(filename, "w") do |file|
+      file.puts "#{title} High Scores:"
+      @players.sort.each do |player|
+        formatted_name = player.name.ljust(20, '.')
+        file.puts "#{formatted_name} #{player.score}" 
+      end
+    end
+  end
 
   def print_player_name_and_health(player)
     puts "#{player.name} (#{player.health})"
